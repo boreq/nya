@@ -1,0 +1,105 @@
+$primary-color: #89C4F4;
+$primary-color-dark: #1E8BC3;
+
+$site-width: 500px;
+
+
+html, body {
+    font-family: sans-serif;
+    background-color: #eee;
+    height: 100%;
+    font-size: 14px;
+}
+
+#site {
+    min-height: 100%;
+}
+
+footer {
+    margin-top: -3em;
+    position: relative;
+    text-align: right;
+    color: #999;
+
+    a {
+        color: inherit;
+    }
+}
+
+.content {
+    padding: 1em;
+}
+
+.wrapper{
+    margin: 0 auto;
+    max-width: $site-width;
+}
+
+h1 {
+    text-size: 20px;
+    font-weight: normal;
+    margin: 3em 0 1em;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color: $primary-color;
+}
+
+a:hover {
+    color: $primary-color-dark;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 1em 0;
+}
+
+// Upload
+progress {
+    margin: 1em auto;
+    width: 100%;
+    border: 0;
+    height: 5px;
+    display: none;
+}
+
+progress::-moz-progress-bar {
+    border-radius: 5px;
+    background-color: $primary-color-dark;
+}
+
+#upload-button {
+    color: #fff;
+    font-size: 30px;
+    text-align: center;
+    background-color: $primary-color;
+    border: 1px solid $primary-color-dark;
+    padding: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#upload-button:hover {
+    background-color: $primary-color-dark;
+}
+
+#upload-input {
+    position: absolute;
+    left: -9999px;
+}
+
+#upload-list {
+    font-size: 12px;
+    line-height: 1.5em;
+
+    .file-url{
+        float: right;
+    }
+}
+
+.error {
+    color: #ff0000;
+}

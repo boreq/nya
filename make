@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# CSS
+sass nya/static/css/src/style.scss | yui-compressor --type css > nya/static/css/main.css
+
+# JS
+srcfiles=(libs/jquery.js nya/static/js/src/upload.js)
+for i in ${!srcfiles[*]}
+do
+    tmpfiles[$i]=$(mktemp)
+    yui-compressor --type js ${srcfiles[$i]} > ${tmpfiles[$i]} 
+done
+cat ${tmpfiles[*]} > nya/static/js/main.js
+rm ${tmpfiles[*]}

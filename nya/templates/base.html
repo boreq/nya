@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}Nya{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script>
+            var extData = {
+                uploadUrl: '{{ url_for('api.upload') }}'
+            };
+        </script>
+    </head>
+
+    <body>
+        <div id="site">
+            {% block content %}{% endblock %}
+        </div>
+        <footer>
+            <div class="wrapper">
+                <a href="{{ url_for('core.stats') }}">stats</a>
+            </div>
+        </footer>
+    </body>
+</html>
