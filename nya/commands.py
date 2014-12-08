@@ -7,6 +7,7 @@
 """
 
 
+import click
 from flask.cli import AppGroup
 from .database import db, init_db, destroy_db
 from .helpers import utc_now
@@ -38,3 +39,12 @@ def remove_expired():
     for f in files:
         db.session.delete(f)
         db.session.commit()
+
+
+@cli.command()
+@click.argument('id', type=click.INT)
+def remove(id):
+    """Remove a file."""
+    f = File.query.filter(File.id == id).one()
+    db.session.delete(f)
+    db.session.commit()

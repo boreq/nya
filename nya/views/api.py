@@ -121,8 +121,7 @@ class Upload(ApiView):
 
         # Check if the file exists
         record = File.query.filter(File.hash == file_record.hash,
-                                   File.expires == file_record.expires) \
-                           .first()
+                                   File.expires == file_record.expires).first()
         if record:
             return record
 
@@ -156,7 +155,7 @@ class Info(ApiView):
             id = int(request.args['id'])
         except:
             raise BadRequestApiError(message='Missing or invalid `id` parameter.')
-        file_record = File.query.filter(File.id==id).first()
+        file_record = File.query.filter(File.id == id).first()
         if file_record is None:
             raise NotFoundApiError
         return {'files': [file_record.to_dict()]}
