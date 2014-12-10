@@ -4,14 +4,12 @@
     <div class="content">
         <div class="wrapper">
             <h1>Stats</h1>
-            <div class="wrapper">
-                <ul>
-                    {% for value in stats %}
-                        <li>{{ value }}</li>
-                    {% endfor %}
-                </ul>
-                <a href="{{ url_for('core.index') }}">Back</a>
-            </div>
+            <ul>
+                {% for value in stats %}
+                    <li>{{ value }}</li>
+                {% endfor %}
+            </ul>
+            <a href="{{ url_for('core.index') }}">Back</a>
         </div>
     </div>
 {% endblock %}
