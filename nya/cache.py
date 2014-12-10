@@ -93,20 +93,20 @@ class CachedBlueprint(Blueprint):
 
     def __init__(self, *args, **kwargs):
         self.default_cached = kwargs.pop('default_cached', True)
-        self.dec_kwargs = {
+        self.cache_options = {
             'timeout': kwargs.pop('timeout', None),
             'key_gen': kwargs.pop('key_gen', None),
         }
-        self.dec_kwargs = {key: value for (key, value) in self.dec_kwargs.items() \
-                           if value is not None}
+        self.cache_options = {key: value for key, value in self.cache_options.items() \
+                              if value is not None}
         super(CachedBlueprint, self).__init__(*args, **kwargs)
 
-    def add_url_rule(self, *args, **kwargs):
+    def add_url_rule(self, rule, endpoint=None, view_func=None, **options):
         """Exactly like add_url_rule but adds a cache decorator if desired.
 
         cached: Indicates whether the view should be cached. Defaults to
                 default_cached. Can be used to everride the default setting.
         """
-        if kwargs.pop('cached', self.default_cached):
-            kwargs['view_func'] = cached(**self.dec_kwargs)(kwargs['view_func'])
-        super(CachedBlueprint, self).add_url_rule(*args, **kwargs)
+        if options.pop('cached', self.default_cached):
+            view_func = cached(**self.cache_options)(view_func)
+        super(CachedBlueprint, self).add_url_rule(rule, endpoint, view_func, **options)
