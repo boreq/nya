@@ -46,5 +46,10 @@ SQLALCHEMY_DATABASE_URI = 'postgresql://user:password@localhost/nya'
 # Directory to which the files will be uploaded.
 UPLOAD_DIR = '/path/to/directory/'
 
+# Urls to uploaded files are generated with that prefix. For example an url to
+# a file '123.jpg' with this option set to '/media' would be:
+# /media/123.jpg
+FILES_URL = '/f'
+
 # Secret key is used by Flask to handle sessions. Set it to random value.
 SECRET_KEY = 'dev_key'
