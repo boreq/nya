@@ -23,6 +23,7 @@ function fileSelectHandler(e) {
     for (var i = 0; f = this.files[i]; i++) {
         formData.append(this.getAttribute('name'), f);
     }
+    formData.append('expires', 0);
 
     upload(formData);
 }
