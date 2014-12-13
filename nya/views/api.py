@@ -3,7 +3,6 @@ import hashlib
 import os
 from flask import request, current_app
 from flask.json import jsonify
-from werkzeug import secure_filename
 from .. import helpers
 from ..cache import CachedBlueprint
 from ..database import db
