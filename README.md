@@ -32,6 +32,19 @@ Read comments in `nya/__init__.py` and `nya/settings.py`. To keep it short:
 you need to specify the path to the file similar to `nya/settings.py` in
 environment variable called `NYA_SETTINGS`.
 
+After that you will have to initialize your database:
+
+	flask -a nya_app.app db_init
+
+To remove expired files run the following command periodically (using cron
+or similar programs):
+
+	flask -a nya_app.app remove_expired
+
+Other commands can be displayed with `--help` flag:
+
+	flask -a nya_app.app --help
+
 
 [virtualenv]: https://virtualenv.pypa.io/en/latest/
 [flask_deploy]: http://flask.pocoo.org/docs/dev/deploying/
