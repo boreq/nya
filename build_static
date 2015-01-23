@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Make sure that you have the following files:"
+echo "libs/jquery.js"
+
 # CSS
 sass nya/static/css/src/style.scss | yui-compressor --type css > nya/static/css/main.css
 
