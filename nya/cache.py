@@ -21,7 +21,7 @@ class Cache(object):
     def __init__(self, app=None):
         if app is not None:
             self.init_app(app)
-        
+
     def init_app(self, app):
         """Call this to init this class with a right cache system."""
         self._client = self._get_preferred_cache_system(app.config)
