@@ -53,3 +53,6 @@ FILES_URL = '/f'
 
 # Secret key is used by Flask to handle sessions. Set it to random value.
 SECRET_KEY = 'dev_key'
+
+# This is the max age of the uploaded files. [s]
+MAX_EXPIRATION = None

@@ -8,6 +8,8 @@
 
 
 import click
+import datetime
+from flask import current_app
 from flask.cli import AppGroup
 from .database import db, init_db, destroy_db
 from .helpers import utc_now
@@ -33,6 +35,14 @@ def db_destroy():
 def remove_expired():
     """Remove files which passed their expiration date."""
     files = File.query.filter(File.expires < utc_now()).all()
+
+    # Remove files which are older than MAX_EXPIRATION
+    ex = current_app.config['MAX_EXPIRATION']
+    if ex:
+        time = utc_now() - datetime.timedelta(seconds=ex)
+        ex_files = File.query.filter(File.date < time).all()
+        files.extend(ex_files)
+
     # Bulk delete will not trigger Python based cascades. That in effect would
     # leave orphaned files on the hard drive. That is why we need to delete each
     # record seperately
