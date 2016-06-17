@@ -3,7 +3,6 @@
 """
 
 
-import re
 import hashlib
 from functools import wraps
 from flask import request, Blueprint
