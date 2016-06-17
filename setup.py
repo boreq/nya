@@ -5,7 +5,7 @@ setup(
     version='0.0.0',
     author='boreq',
     author_email='boreq@sourcedrops.com',
-    description = ('Simple website for sharing files.'),
+    description = ('A simple website for sharing files.'),
     license='BSD',
     packages=['nya'],
     install_requires=[
