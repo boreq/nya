@@ -47,7 +47,7 @@ class NotFound(APIException):
 
 
 def api_view(f):
-    """Decorator which catches exceptions which don't inherit from APIException 
+    """Decorator which catches exceptions which don't inherit from APIException
     and throws an APIException instead. That way a wrapped view will always
     trigger the api error handler instead of the main one.
     """

@@ -34,7 +34,9 @@ def db_destroy():
 @cli.command()
 def remove_expired():
     """Remove files which passed their expiration date."""
-    files = File.query.filter(File.expires < utc_now()).all()
+    files = File.query.filter(File.expires != None) \
+                      .filter(File.expires < utc_now()) \
+                      .all()
 
     # Remove files which are older than MAX_EXPIRATION
     ex = current_app.config['MAX_EXPIRATION']
