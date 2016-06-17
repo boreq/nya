@@ -1,5 +1,5 @@
 # Nya
-Simple website for uploading files.
+A simple website for uploading files.
 
 
 ## How to install
@@ -15,7 +15,7 @@ but you should not use it for deployment as it is unsafe. You have to go through
 configuration step first.
 
     cd cloned_nya_repository
-    flask -a nya_app.py run
+    FLASK_APP=nya_app.py flask run
 
 
 ## How to deploy
@@ -34,16 +34,16 @@ environment variable called `NYA_SETTINGS`.
 
 After that you will have to initialize your database:
 
-	flask -a nya_app.app db_init
+	FLASK_APP=nya_app.py flask db_init
 
 To remove expired files run the following command periodically (using cron
 or similar programs):
 
-	flask -a nya_app.app remove_expired
+	FLASK_APP=nya_app.py flask remove_expired
 
 Other commands can be displayed with `--help` flag:
 
-	flask -a nya_app.app --help
+	FLASK_APP=nya_app.py flask --help
 
 
 [virtualenv]: https://virtualenv.pypa.io/en/latest/
