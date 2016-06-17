@@ -1,3 +1,7 @@
 __pycache__/
 *.py[cod]
 .sass-cache
+*.egg-info
+pylintrc
+venv
+libs
