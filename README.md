@@ -32,18 +32,9 @@ Read comments in `nya/__init__.py` and `nya/settings.py`. To keep it short:
 you need to specify the path to the file similar to `nya/settings.py` in
 environment variable called `NYA_SETTINGS`.
 
-After that you will have to initialize your database:
-
-	FLASK_APP=nya_app.py flask db_init
-
-To remove expired files run the following command periodically (using cron
-or similar programs):
-
-	FLASK_APP=nya_app.py flask remove_expired
-
-Other commands can be displayed with `--help` flag:
-
-	FLASK_APP=nya_app.py flask --help
+Either redis or memcached is needed to run the website. Depending on your
+choice one of two optional dependencies listed in `setup.py` needs to be
+installed. 
 
 
 [virtualenv]: https://virtualenv.pypa.io/en/latest/
