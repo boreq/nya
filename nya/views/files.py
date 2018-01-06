@@ -1,4 +1,6 @@
-from flask import Blueprint, current_app, send_from_directory
+import os
+from flask import Blueprint, Response
+from ..models import File
 
 
 bl = Blueprint('files', __name__)
@@ -10,4 +12,6 @@ def media(filename):
     using url_for method. Shouldn't be used in production (override routes to
     this view in your web server configuration and serve the files directly).
     """
-    return send_from_directory(current_app.config['UPLOAD_DIR'], filename)
+    key = os.path.splitext(filename)[0]
+    j = File.get(key)
+    return Response(j['data'], mimetype=j['mime'])

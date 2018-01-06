@@ -11,13 +11,11 @@ setup(
     install_requires=[
         'Werkzeug>=0.10',
         'Flask>=0.11',
-        'flask-sqlalchemy',
         'pytz',
         'click',
     ],
     extras_require = {
         'Memcached caching':  ['python3-memcached'],
         'Redis caching':  ['redis'],
-        'PostgreSQL':  ['psycopg2'],
     }
 )

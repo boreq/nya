@@ -45,9 +45,7 @@ def create_app(config=None, envvar='NYA_SETTINGS'):
 
 def init_app(app):
     """Calls init_app on all used extensions."""
-    from .database import db
     from .cache import cache
-    db.init_app(app)
     cache.init_app(app)
 
 

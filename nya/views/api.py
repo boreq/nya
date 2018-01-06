@@ -1,11 +1,8 @@
 from functools import wraps
-import hashlib
 import os
-from flask import request, current_app
+from flask import request, current_app, url_for
 from flask.json import jsonify
-from .. import helpers
 from ..cache import CachedBlueprint
-from ..database import db
 from ..models import File
 
 
@@ -69,48 +66,17 @@ def api_exc_handler(e):
     return response
 
 
-def make_db_entry(file_storage, expires):
-    """Returns a File database model constructed using FileStorage data."""
-    hasher = hashlib.sha512()
-    hash, size = helpers.b64_filehash(file_storage, hasher)
-    file_storage.stream.seek(0) # Stream ended after calculating the hash
-    rw = File(original_filename=file_storage.filename,
-              extension=os.path.splitext(file_storage.filename)[1],
-              hash=hash, size=size)
-    if expires > 0:
-        rw.set_expiration(expires)
-    return rw
+def add_file(file_storage, expires):
+    hash = File.save(file_storage, expires)
 
+    extension = os.path.splitext(file_storage.filename)[1]
+    filename = hash + extension
 
-def add_or_get_file(file_storage, expires):
-    """Saves the file and returns its database record or returns a record of
-    an identical file if it already exists.
-    """
-    file_record = make_db_entry(file_storage, expires)
-
-    # Check if the file exists
-    record = File.query.filter(File.hash == file_record.hash,
-                               File.expires == file_record.expires).first()
-    if record:
-        return record
-
-    # Otherwise create a new file
-    db.session.add(file_record)
-    db.session.flush()
-    db.session.refresh(file_record)
-    path = os.path.join(current_app.config['UPLOAD_DIR'], file_record.filename)
-    file_storage.save(path)
-    db.session.commit()
-    return file_record
-
-
-def get_stats():
-    """Get stats about the uploaded files."""
-    data = db.session.query(db.func.count(File.id).label('total_files'),
-                            db.func.sum(File.size).label('total_size')).first()
     return {
-        'total_files': data.total_files,
-        'total_size': data.total_size or 0 # Avoid returning null instead of 0
+        'original_filename': file_storage.filename,
+        'filename': filename,
+        'url': url_for('files.media', filename=filename),
+        'expires': expires,
     }
 
 
@@ -119,31 +85,13 @@ def get_stats():
 def upload():
     expires = request.form.get('expires', -1, type=int)
     if expires < 0:
-        raise BadRequest(message='Parameter `expires` should be a non-negative '
-            'integer.')
+        raise BadRequest(message='Parameter `expires` should be a non-negative integer.')
+    expires = min(current_app.config['MAX_EXPIRATION'], expires)
     rw = {'files': []}
     try:
         for f in request.files.getlist('file'):
-            file_record = add_or_get_file(f, expires)
-            rw['files'].append(file_record.to_dict())
+            json = add_file(f, expires)
+            rw['files'].append(json)
     except:
         raise APIException(data=rw)
     return jsonify(rw)
-
-
-@bl.route('/file/info', cached=True)
-@api_view
-def info():
-    id = request.args.get('id', -1, type=int)
-    if id < 0:
-        raise BadRequest(message='Id is missing or invalid.')
-    file_record = File.query.filter(File.id == id).first()
-    if file_record is None:
-        raise NotFound(message='No file with such id.')
-    return jsonify({'files': [file_record.to_dict()]})
-
-
-@bl.route('/stats', cached=True)
-@api_view
-def stats():
-    return jsonify(get_stats())

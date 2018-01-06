@@ -25,6 +25,14 @@
 # [seconds]
 CACHE_TIMEOUT = 60 * 5
 
+# This is the max age of the uploaded files.
+# [seconds]
+MAX_EXPIRATION = 60 * 5
+
+# Max file size.
+# [bytes]
+MAX_CONTENT_LENGTH = 10 * 1024 * 1024
+
 # Adds prefix to all cache keys. Change this to run multiple instances of this
 # app.
 CACHE_KEY_PREFIX = 'nya'
@@ -39,13 +47,6 @@ MEMCACHED = None
 # REDIS = {'host': 'localhost', 'port': 6379, 'password': None, 'db': 0}
 REDIS = None
 
-# Database URI.
-# https://pythonhosted.org/Flask-SQLAlchemy/config.html#configuration-keys
-SQLALCHEMY_DATABASE_URI = 'postgresql://user:password@localhost/nya'
-
-# Directory to which the files will be uploaded.
-UPLOAD_DIR = '/path/to/directory/'
-
 # Urls to uploaded files are generated with that prefix. For example an url to
 # a file '123.jpg' with this option set to '/media' would be:
 # /media/123.jpg
@@ -53,6 +54,3 @@ FILES_URL = '/f'
 
 # Secret key is used by Flask to handle sessions. Set it to random value.
 SECRET_KEY = 'dev_key'
-
-# This is the max age of the uploaded files. [s]
-MAX_EXPIRATION = None

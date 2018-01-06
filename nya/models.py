@@ -1,73 +1,50 @@
-"""
-    flask-sqlalchemy models.
-"""
+import hashlib
+import base64
+import json
+from .cache import cache
 
 
-import datetime
-import os
-from flask import url_for, current_app
-from .database import db
-from .helpers import utc_now
+def _filehash(f, hasher, blocksize=65536):
+    """Returns a hash of the file and size of the stream."""
+    buf = f.read(blocksize)
+    size = 0
+    while len(buf) > 0:
+        size += len(buf)
+        hasher.update(buf)
+        buf = f.read(blocksize)
+    return (hasher.hexdigest()[:30], size)
 
 
-class File(db.Model):
-    __tablename__ = 'nya_files'
+class File(object):
 
-    id = db.Column(db.Integer, primary_key=True)
-    original_filename = db.Column(db.String(255), nullable=False)
-    extension = db.Column(db.String(255), nullable=False)
-    hash = db.Column(db.String(88), nullable=False)
-    size = db.Column(db.Integer, nullable=True)
-    date = db.Column(db.DateTime(timezone=True), nullable=False, default=utc_now)
-    expires = db.Column(db.DateTime(timezone=True), nullable=True, default=None)
+    @staticmethod
+    def _transform_key(key):
+        return 'file_' + key
 
-    def __str__(self):
-        return '<File #%d>' % self.id
+    @staticmethod
+    def save(file_storage, expires):
+        # Create file key
+        hasher = hashlib.sha224()
+        hash, size = _filehash(file_storage, hasher)
+        file_storage.stream.seek(0) # Stream ended after calculating the hash
 
-    @property
-    def filename(self):
-        """Returns a filename. Example:
-        123.jpg
-        """
-        return '%d%s' % (self.id, self.extension)
+        # Save the data
+        data = {
+                'data': base64.b64encode(file_storage.stream.read()).decode(),
+                'mime': file_storage.mimetype,
+        }
+        cache.set(File._transform_key(hash), json.dumps(data), timeout=expires)
+        return hash
 
-    @property
-    def filepath(self): 
-        """Returns a path to a file on a hard drive. Example:
-        /var/www/upload/nya/123.jpg
-        """
-        return os.path.join(current_app.config['UPLOAD_DIR'], self.filename)
+    @staticmethod
+    def get(hash):
+        value = cache.get(File._transform_key(hash))
+        if value is None:
+            return None
+        j = json.loads(value)
+        j['data'] = base64.b64decode(j['data'])
+        return j
 
-    @property
-    def url(self):
-        """Returns an url to a file. See views.files.media. Example:
-        /f/123.jpg
-        """
-        return url_for('files.media', filename=self.filename)
-
-    def to_dict(self):
-        """Returns a dictionary which can be easily converted to JSON."""
-        properties = ['id', 'original_filename', 'extension', 'hash', 'size', 'url']
-        data = {key: getattr(self, key) for key in properties}
-        data['date'] = str(self.date)
-        data['expires'] = str(self.expires) if self.expires else self.expires
-        return data
-
-    def delete_file(self):
-        """Deletes a file associated with this database record from a HDD."""
-        try:
-            os.remove(self.filepath)
-        except FileNotFoundError:
-            pass
-
-    def set_expiration(self, seconds):
-        """Set an expriation date of this file given number of seconds in the
-        future.
-        """
-        self.expires = utc_now() + datetime.timedelta(seconds=seconds)
-
-
-def pre_file_delete(mapper, connection, target):
-    """Deletes the file before deleting the database record."""
-    target.delete_file()
-db.event.listen(File, 'before_delete', pre_file_delete)
+    @staticmethod
+    def delete(hash):
+        cache.delete(File._transform_key(hash))
