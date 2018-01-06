@@ -87,6 +87,8 @@ def upload():
     if expires < 0:
         raise BadRequest(message='Parameter `expires` should be a non-negative integer.')
     expires = min(current_app.config['MAX_EXPIRATION'], expires)
+    if expires <= 0:
+        expires = current_app.config['MAX_EXPIRATION']
     rw = {'files': []}
     try:
         for f in request.files.getlist('file'):

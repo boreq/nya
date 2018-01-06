@@ -1,5 +1,5 @@
 import os
-from flask import Blueprint, Response
+from flask import Blueprint, Response, abort
 from ..models import File
 
 
@@ -14,4 +14,6 @@ def media(filename):
     """
     key = os.path.splitext(filename)[0]
     j = File.get(key)
+    if j is None:
+        abort(404)
     return Response(j['data'], mimetype=j['mime'])
