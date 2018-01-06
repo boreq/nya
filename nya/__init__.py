@@ -51,14 +51,10 @@ def init_app(app):
 
 def validate_config(app):
     """Validates app config."""
-    import os
     # Working in deployment mode (debug and testing disabled)
     if not (app.config['DEBUG'] or app.config['TESTING']):
         if app.config['SECRET_KEY'] in ['', 'dev_key']:
             raise Exception('Set your SECRET_KEY.')
-    # Nonexistent upload directory
-    if not os.path.isdir(app.config['UPLOAD_DIR']):
-        raise Exception('UPLOAD_DIR "%s" doesn\'t exist.' % app.config['UPLOAD_DIR'])
 
 
 def load_debug(app):
