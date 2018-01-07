@@ -19,8 +19,6 @@ $(function() {
 
 
 function fileSelectHandler(e) {
-    spinner.css('display', 'block');
-
     var formData = new FormData();
 
     for (var i = 0; f = this.files[i]; i++) {
@@ -86,6 +84,7 @@ function uploadErrorHandler(jqXHR, textStatus, errorThrown) {
 function beforeSendHandler(qXHR, settings) {
     errorDiv.empty();
     uploadList.empty();
+    spinner.css('display', 'block');
 }
 
 
