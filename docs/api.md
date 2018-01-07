@@ -53,3 +53,33 @@ Uploads a file.
 In case of an exception an additional key called `files` will be present
 containing information about the files which were uploaded successfully, just as
 shown above, as well as the usual key `message`.
+
+### /stats [GET]
+Returns statistics.
+
+#### Arguments
+None.
+
+#### Response
+
+    {
+        "redis_number_of_keys": 2, 
+        "redis_peak_memory": 9670472, 
+        "redis_peak_memory_human": "9.22M", 
+        "redis_used_memory": 579504, 
+        "redis_used_memory_human": "565.92K"
+    }
+
+* *redis_number_of_keys*  
+  Number of keys in redis, integer.
+* *redis_peak_memory*  
+  Peak memory used by redis, bytes, integer.
+* *redis_peak_memory_human*  
+  Peak memory used by redis, human readable, string.
+* *redis_used_memory*  
+  Memory used by redis, bytes, integer.
+* *redis_used_memory_human*  
+  Memory used by redis, human readable, string.
+
+#### Exceptions.
+Default.

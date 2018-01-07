@@ -1,8 +1,9 @@
 from functools import wraps
 import os
+from werkzeug.contrib.cache import RedisCache
 from flask import request, current_app, url_for
 from flask.json import jsonify
-from ..cache import CachedBlueprint
+from ..cache import CachedBlueprint, cache
 from ..models import File
 
 
@@ -80,6 +81,29 @@ def add_file(file_storage, expires):
     }
 
 
+def get_stats():
+    stats = {}
+
+    if type(cache._client) == RedisCache:
+        info = cache._client._client.info()
+
+        if 'used_memory' in info:
+            stats['redis_used_memory'] = info['used_memory']
+
+        if 'used_memory_human' in info:
+            stats['redis_used_memory_human'] = info['used_memory_human']
+
+        if 'used_memory_peak' in info:
+            stats['redis_peak_memory'] = info['used_memory_peak']
+
+        if 'used_memory_peak_human' in info:
+            stats['redis_peak_memory_human'] = info['used_memory_peak_human']
+
+        stats['redis_number_of_keys'] = cache._client._client.dbsize()
+
+    return stats
+
+
 @bl.route('/file/upload', methods=['POST'])
 @api_view
 def upload():
@@ -97,3 +121,9 @@ def upload():
     except:
         raise APIException(data=rw)
     return jsonify(rw)
+
+
+@bl.route('/stats', cached=True)
+@api_view
+def stats():
+    return jsonify(get_stats())

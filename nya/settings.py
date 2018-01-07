@@ -19,7 +19,7 @@
 """
 
 
-# Max cache age.
+# Default cache timeout.
 # Cache is disabled in DEBUG or TESTING mode.
 # See cache.Cache._get_preferred_cache_system to learn more.
 # [seconds]
