@@ -1,4 +1,4 @@
-var errorDiv, uploadList, progressBar;
+var errorDiv, uploadList, progressBar, spinner;
 
 
 $(function() {
@@ -7,6 +7,7 @@ $(function() {
     errorDiv = $('#upload-error');
     uploadList = $('#upload-list');
     progressBar = $('progress');
+    spinner = $('#spinner');
 
     uploadButton.on('click', function(e) {
         e.preventDefault();
@@ -18,6 +19,8 @@ $(function() {
 
 
 function fileSelectHandler(e) {
+    spinner.css('display', 'block');
+
     var formData = new FormData();
 
     for (var i = 0; f = this.files[i]; i++) {
@@ -60,11 +63,14 @@ function uploadProgressHandler(e) {
 
 
 function uploadSuccessHandler(data, textStatus, jqXHR) {
+    spinner.css('display', 'none');
     listUploadedFiles(data['files']);
 }
 
 
 function uploadErrorHandler(jqXHR, textStatus, errorThrown) {
+    spinner.css('display', 'none');
+
     try {
         var data = $.parseJSON(jqXHR.responseText);
         listUploadedFiles(data['files']);

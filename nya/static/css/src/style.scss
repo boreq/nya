@@ -107,3 +107,10 @@ progress::-moz-progress-bar {
 .error {
     color: #ff0000;
 }
+
+#spinner {
+    text-align: center;
+    font-size: 40px;
+    color: $primary-color-dark;
+    display: none;
+}
