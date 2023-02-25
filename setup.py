@@ -9,10 +9,12 @@ setup(
     license='BSD',
     packages=['nya'],
     install_requires=[
-        'Werkzeug>=0.10',
-        'Flask>=0.11',
+        'Werkzeug==0.11.3',
+        'Flask==0.12.4',
+        'Jinja2==2.4',
+        'itsdangerous==0.21',
+        'click==2.0',
         'pytz',
-        'click',
     ],
     extras_require = {
         'Memcached caching':  ['python3-memcached'],
