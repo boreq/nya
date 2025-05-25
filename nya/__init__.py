@@ -69,8 +69,3 @@ def load_debug(app):
         import sys
         sys.stderr.write('Flask Debug Toolbar was not loaded. You can install '
             'it with `pip install flask-debugtoolbar`. Error: %s\n' % e)
-    # SQLAlchemy logging
-    if app.config.get('LOG_QUERIES'):
-        import logging
-        logging.basicConfig()
-        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
