@@ -1,6 +1,11 @@
 # Nya
 A simple website for uploading files.
 
+## Just use docker
+
+This README is outdated, if for some reason you want to run this software: just
+use Docker. This will hopefully minimize the amount of computer-induced
+suffering you will experience. Reference `compose.dev.yaml`.
 
 ## How to install
 I recommend using [virtualenv][virtualenv].
