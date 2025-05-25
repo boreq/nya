@@ -4,7 +4,7 @@
 
 
 import hashlib
-import redis
+import valkey
 import pickle
 from functools import wraps
 from flask import request, Blueprint
@@ -29,12 +29,12 @@ class Cache(object):
         self._default_timeout = app.config['CACHE_TIMEOUT']
         self._key_prefix = app.config['CACHE_KEY_PREFIX']
 
-        redis_config = app.config['REDIS']
-        self._client = redis.Redis(
-            host = redis_config['host'],
-            port = redis_config['port'],
-            password = redis_config['password'],
-            db = redis_config['db']
+        valkey_config = app.config['VALKEY']
+        self._client = valkey.Valkey(
+            host = valkey_config['host'],
+            port = valkey_config['port'],
+            password = valkey_config['password'],
+            db = valkey_config['db']
         )
         
     def get(self, key):
@@ -60,18 +60,18 @@ class Cache(object):
         info = self._client.info()
 
         if 'used_memory' in info:
-            stats['redis_used_memory'] = info['used_memory']
+            stats['cache_used_memory'] = info['used_memory']
 
         if 'used_memory_human' in info:
-            stats['redis_used_memory_human'] = info['used_memory_human']
+            stats['cache_used_memory_human'] = info['used_memory_human']
 
         if 'used_memory_peak' in info:
-            stats['redis_peak_memory'] = info['used_memory_peak']
+            stats['cache_peak_memory'] = info['used_memory_peak']
 
         if 'used_memory_peak_human' in info:
-            stats['redis_peak_memory_human'] = info['used_memory_peak_human']
+            stats['cache_peak_memory_human'] = info['used_memory_peak_human']
 
-        stats['redis_number_of_keys'] = self._client.dbsize()
+        stats['cache_number_of_keys'] = self._client.dbsize()
 
         return stats
 

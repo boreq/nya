@@ -14,6 +14,6 @@ setup(
         'Jinja2==3.1.6',
         'click==8.2.1',
         'pytz',
-        'redis',
+        'valkey',
     ],
 )

@@ -37,10 +37,10 @@ MAX_CONTENT_LENGTH = 10 * 1024 * 1024
 # app.
 CACHE_KEY_PREFIX = 'nya'
 
-# Redis server. Set to None to disable. Should be a dictionary. Set the
-# arguments in the following way:
-# REDIS = {'host': 'localhost', 'port': 6379, 'password': None, 'db': 0}
-REDIS = None
+# Valkey server. Should be a dictionary. Set the arguments in the following
+# way:
+# VALKEY = {'host': 'localhost', 'port': 6379, 'password': None, 'db': 0}
+VALKEY = None
 
 # Urls to uploaded files are generated with that prefix. For example an url to
 # a file '123.jpg' with this option set to '/media' would be:

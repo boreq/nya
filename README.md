@@ -32,7 +32,7 @@ Read comments in `nya/__init__.py` and `nya/settings.py`. To keep it short:
 you need to specify the path to the file similar to `nya/settings.py` in
 environment variable called `NYA_SETTINGS`.
 
-Redis is needed to run the website. 
+Valkey is needed to run the website. 
 
 
 [virtualenv]: https://virtualenv.pypa.io/en/latest/

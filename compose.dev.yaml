@@ -5,5 +5,5 @@ services:
       - "8080:80"
     volumes:
       - "./settings.dev.py:/data/settings.py"
-  redis:
-    image: "redis:alpine"
+  valkey:
+    image: "valkey/valkey:latest"
