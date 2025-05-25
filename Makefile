@@ -12,10 +12,6 @@ venv:
 pyflakes:
 	source ./venv/bin/activate && pyflakes nya
 
-.PHONY: test
-test:
-	py.test tests
-
 .PHONY: static
 static:
 	sh build_static
