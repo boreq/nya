@@ -32,9 +32,7 @@ Read comments in `nya/__init__.py` and `nya/settings.py`. To keep it short:
 you need to specify the path to the file similar to `nya/settings.py` in
 environment variable called `NYA_SETTINGS`.
 
-Either redis or memcached is needed to run the website. Depending on your
-choice one of two optional dependencies listed in `setup.py` needs to be
-installed. 
+Redis is needed to run the website. 
 
 
 [virtualenv]: https://virtualenv.pypa.io/en/latest/
