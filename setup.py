@@ -4,20 +4,16 @@ setup(
     name='nya',
     version='0.0.0',
     author='boreq',
-    author_email='boreq@sourcedrops.com',
+    author_email='boreq@0x46.net',
     description = ('A simple website for sharing files.'),
     license='BSD',
     packages=['nya'],
     install_requires=[
-        'Werkzeug==0.11.3',
-        'Flask==0.12.4',
-        'Jinja2==2.4',
-        'itsdangerous==0.21',
-        'click==2.0',
+        'Werkzeug==3.1.3',
+        'Flask==3.1.1',
+        'Jinja2==3.1.6',
+        'click==8.2.1',
         'pytz',
+        'redis',
     ],
-    extras_require = {
-        'Memcached caching':  ['python3-memcached'],
-        'Redis caching':  ['redis'],
-    }
 )

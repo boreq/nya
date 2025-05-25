@@ -1,0 +1,9 @@
+services:
+  nya:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - "./settings.dev.py:/data/settings.py"
+  redis:
+    image: "redis:alpine"

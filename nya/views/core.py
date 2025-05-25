@@ -1,6 +1,5 @@
 from flask import render_template
-from ..cache import CachedBlueprint
-from .api import get_stats
+from ..cache import CachedBlueprint, cache
 
 
 bl = CachedBlueprint('core', __name__)
@@ -13,7 +12,7 @@ def index():
 
 @bl.route('/stats')
 def stats():
-    data = get_stats()
+    data = cache.get_stats()
 
     stats = []
     for key, value in data.items():

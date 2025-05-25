@@ -4,9 +4,13 @@
 
 
 import hashlib
+import redis
+import pickle
 from functools import wraps
 from flask import request, Blueprint
-from werkzeug.contrib.cache import MemcachedCache, RedisCache, NullCache
+
+
+_integer_types = (int,)
 
 
 class Cache(object):
@@ -20,28 +24,79 @@ class Cache(object):
     def __init__(self, app=None):
         if app is not None:
             self.init_app(app)
-
+    
     def init_app(self, app):
-        """Call this to init this class with a right cache system."""
-        self._client = self._get_preferred_cache_system(app.config)
+        self._default_timeout = app.config['CACHE_TIMEOUT']
+        self._key_prefix = app.config['CACHE_KEY_PREFIX']
 
-    def _get_preferred_cache_system(self, config):
-        """Returns an initialized cache system object."""
-        if config['REDIS']:
-            return RedisCache(
-                default_timeout=config['CACHE_TIMEOUT'],
-                key_prefix=config['CACHE_KEY_PREFIX'],
-                **config['REDIS']
-            )
-        if config['MEMCACHED']:
-            return MemcachedCache(
-                servers=config['MEMCACHED'],
-                default_timeout=config['CACHE_TIMEOUT'],
-                key_prefix=config['CACHE_KEY_PREFIX']
-            )
-        return NullCache()
+        redis_config = app.config['REDIS']
+        self._client = redis.Redis(
+            host = redis_config['host'],
+            port = redis_config['port'],
+            password = redis_config['password'],
+            db = redis_config['db']
+        )
+        
+    def get(self, key):
+        return self._load_object(self._client.get(self._key_prefix + key))
 
-    __getattr__ = lambda s, n: getattr(s._client, n)
+    def set(self, key, value, timeout=None):
+        timeout = self._normalize_timeout(timeout)
+        dump = self._dump_object(value)
+        if timeout == -1:
+            result = self._client.set(name=self._key_prefix + key, value=dump)
+        else:
+            result = self._client.setex(
+                name=self._key_prefix + key, value=dump, time=timeout
+            )
+        return result
+
+    def delete(self, key):
+        return self._client.delete(self._key_prefix + key)
+
+    def get_stats(self):
+        stats = {}
+
+        info = self._client.info()
+
+        if 'used_memory' in info:
+            stats['redis_used_memory'] = info['used_memory']
+
+        if 'used_memory_human' in info:
+            stats['redis_used_memory_human'] = info['used_memory_human']
+
+        if 'used_memory_peak' in info:
+            stats['redis_peak_memory'] = info['used_memory_peak']
+
+        if 'used_memory_peak_human' in info:
+            stats['redis_peak_memory_human'] = info['used_memory_peak_human']
+
+        stats['redis_number_of_keys'] = self._client.dbsize()
+
+        return stats
+
+    def _dump_object(self, value):
+        t = type(value)
+        if t in _integer_types:
+            return str(value).encode("ascii")
+        return b"!" + pickle.dumps(value)
+
+    def _load_object(self, value):
+        if value is None:
+            return None
+        if value.startswith(b"!"):
+            try:
+                return pickle.loads(value[1:])
+            except pickle.PickleError:
+                return None
+        return int(value)
+
+    def _normalize_timeout(self, timeout):
+        if timeout is None:
+            timeout = self._default_timeout
+        if timeout == 0:
+            timeout = -1
+        return timeout
 
 
 cache = Cache()

@@ -37,11 +37,6 @@ MAX_CONTENT_LENGTH = 10 * 1024 * 1024
 # app.
 CACHE_KEY_PREFIX = 'nya'
 
-# List of memcached servers. Set to None to disable. Should be a tuple
-# or a list. Example:
-# MEMCACHED = ['127.0.0.1:11211']
-MEMCACHED = None
-
 # Redis server. Set to None to disable. Should be a dictionary. Set the
 # arguments in the following way:
 # REDIS = {'host': 'localhost', 'port': 6379, 'password': None, 'db': 0}
