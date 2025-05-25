@@ -6,15 +6,11 @@ dev:
 venv:
 	rm -rf ./venv
 	python -m venv venv
-	source ./venv/bin/activate && pip install -e .
-
-.PHONY: run
-run:
-	source ./venv/bin/activate && flask --app nya run
+	source ./venv/bin/activate && pip install pyflakes
 
 .PHONY: pyflakes
 pyflakes:
-	pyflakes nya
+	source ./venv/bin/activate && pyflakes nya
 
 .PHONY: test
 test:
