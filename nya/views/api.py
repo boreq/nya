@@ -67,16 +67,14 @@ def api_exc_handler(e):
 
 
 def add_file(file_storage, expires):
-    hash = File.save(file_storage, expires)
-
-    extension = os.path.splitext(file_storage.filename)[1]
-    filename = hash + extension
+    data = File.save(file_storage, expires)
 
     return {
         'original_filename': file_storage.filename,
-        'filename': filename,
-        'url': url_for('files.media', filename=filename),
         'expires': expires,
+
+        'filename': data['filename'],
+        'url': url_for('files.media', filename=data['filename']),
     }
 
 
@@ -89,14 +87,17 @@ def upload():
     expires = min(current_app.config['MAX_EXPIRATION'], expires)
     if expires <= 0:
         expires = current_app.config['MAX_EXPIRATION']
-    rw = {'files': []}
+
+    response = {
+        'files': [],
+    }
     try:
         for f in request.files.getlist('file'):
             json = add_file(f, expires)
-            rw['files'].append(json)
+            response['files'].append(json)
     except:
-        raise APIException(data=rw)
-    return jsonify(rw)
+        raise APIException(data=response)
+    return jsonify(response)
 
 
 @bl.route('/stats', cached=True)

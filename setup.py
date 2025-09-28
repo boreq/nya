@@ -15,5 +15,6 @@ setup(
         'click==8.2.1',
         'pytz',
         'valkey',
+        'Pillow==11.3.0',
     ],
 )

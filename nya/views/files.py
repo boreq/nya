@@ -8,12 +8,8 @@ bl = Blueprint('files', __name__)
 
 @bl.route('/<path:filename>')
 def media(filename):
-    """Serves uploaded files. This view is also used to generate urls to files
-    using url_for method. Shouldn't be used in production (override routes to
-    this view in your web server configuration and serve the files directly).
-    """
-    key = os.path.splitext(filename)[0]
-    j = File.get(key)
+    """Serves uploaded files."""
+    j = File.get(filename)
     if j is None:
         abort(404)
     return Response(j['data'], mimetype=j['mime'])
